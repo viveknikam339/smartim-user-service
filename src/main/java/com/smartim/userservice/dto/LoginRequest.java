@@ -3,15 +3,10 @@ package com.smartim.userservice.dto;
 import lombok.Data;
 
 @Data
-public class RegisterRequest {
+public class LoginRequest {
 
     private String email;
 
     private String password;
 
-    private String fullName;
-
-    private String mobileNumber;
-
-    private String role;
 }

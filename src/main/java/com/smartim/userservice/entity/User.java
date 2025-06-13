@@ -26,5 +26,10 @@ public class User extends BaseEntity{
     @Column(unique = true)
     private String mobileNumber;
 
-    private Boolean enabled = true;
+    private Boolean userStatus = true;
+
+    private String role;
+
+    @Column(unique = true)
+    private String userName;
 }
