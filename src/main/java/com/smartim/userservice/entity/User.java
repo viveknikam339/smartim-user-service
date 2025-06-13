@@ -1,9 +1,6 @@
 package com.smartim.userservice.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,12 +10,26 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class User extends BaseEntity{
+
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @Column(unique = true)
     private String email;
+
     private String password;
+
     private String fullName;
-    private Boolean enabled = true;
+
+    @Column(unique = true)
+    private String mobileNumber;
+
+    private Boolean userStatus = true;
+
+    private String role;
+
+    @Column(unique = true)
+    private String userName;
 }
