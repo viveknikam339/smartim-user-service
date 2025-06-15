@@ -14,4 +14,6 @@ public class RegisterRequest {
     private String mobileNumber;
 
     private String role;
+
+    private String userName;
 }
