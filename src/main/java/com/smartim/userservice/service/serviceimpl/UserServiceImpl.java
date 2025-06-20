@@ -1,6 +1,5 @@
 package com.smartim.userservice.service.serviceimpl;
 
-import com.smartim.userservice.dto.AuthResponse;
 import com.smartim.userservice.dto.LoginRequest;
 import com.smartim.userservice.dto.RegisterRequest;
 import com.smartim.userservice.entity.User;
@@ -35,22 +34,21 @@ public class UserServiceImpl implements UserService {
             );
         }
         User user = mapper.toUserEntity(request);
+        user.setPassword(encoder.encode(request.getPassword()));
         user.setCreatedOn(LocalDateTime.now());
         user.setCreatedBy(user.getUserName());
         repo.save(user);
-        String token = jwtUtil.generateToken(user.getEmail(), user.getRole());
-        return token;
+        return jwtUtil.generateToken(user.getEmail(), user.getRole());
     }
 
     @Override
     public String login(LoginRequest request) {
-        User user = repo.findByUserName(request.getEmail()).orElseThrow(
+        User user = repo.findByUserName(request.getUserName()).orElseThrow(
                 () -> new UsernameNotFoundException("User not found.")
         );
         if (!encoder.matches(request.getPassword(), user.getPassword()))
             throw new BadCredentialsException("Invalid password");
-        String token = jwtUtil.generateToken(user.getEmail(), user.getRole());
-        return token;
+        return jwtUtil.generateToken(user.getUserName(), user.getRole());
     }
 
     @Override
