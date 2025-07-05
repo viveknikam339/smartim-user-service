@@ -32,6 +32,7 @@ public interface UserMapper {
      */
     @Mapping(target = "password", expression = "java(encoder.encode(registerRequest.getPassword()))")
     @Mapping(target = "createdOn", expression = "java(LocalDateTime.now())")
+    @Mapping(target = "userStatus", constant = "true")
     @Mapping(target = "createdBy", source = "userName")
     User toUserEntity(RegisterRequest registerRequest, @Context PasswordEncoder encoder);
 
