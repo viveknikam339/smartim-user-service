@@ -1,5 +1,8 @@
 package com.smartim.userservice.contants;
 
+/**
+ * All constants used in this service are defined here
+ */
 public class UserConstants {
 
     private UserConstants(){

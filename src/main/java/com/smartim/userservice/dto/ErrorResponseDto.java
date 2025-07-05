@@ -7,6 +7,9 @@ import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
 
+/**
+ * ErrorResponseDto DTO used to return error response
+ */
 @Data @AllArgsConstructor
 public class ErrorResponseDto {
 

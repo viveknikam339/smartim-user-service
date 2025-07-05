@@ -6,6 +6,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
+
+/**
+ * Represents a user entity in the system.
+ * Stores user authentication and profile-related information.
+ */
 @Entity
 @Table(name = "users")
 @Data

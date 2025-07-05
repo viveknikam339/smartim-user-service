@@ -2,7 +2,7 @@ package com.smartim.userservice.service;
 
 import com.smartim.userservice.dto.LoginRequest;
 import com.smartim.userservice.dto.RegisterRequest;
-import com.smartim.userservice.entity.User;
+import com.smartim.userservice.dto.UserDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,7 +14,7 @@ public interface UserService {
 
     String login(LoginRequest request);
 
-    User getUserByEmail(String email);
+    UserDto getUserByEmail(String email);
 
-    List<User> getUsersByRole(String role);
+    List<UserDto> getUsersByRole(String role);
 }

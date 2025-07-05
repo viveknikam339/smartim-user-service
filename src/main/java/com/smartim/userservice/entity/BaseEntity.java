@@ -8,6 +8,9 @@ import lombok.ToString;
 
 import java.time.LocalDateTime;
 
+/**
+ * BaseEntity contains common columns extended by all the entity classes
+ */
 @MappedSuperclass
 @Getter @Setter @ToString
 public class BaseEntity {

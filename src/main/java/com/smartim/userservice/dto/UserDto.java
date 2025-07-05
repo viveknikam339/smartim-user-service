@@ -3,6 +3,9 @@ package com.smartim.userservice.dto;
 import lombok.Data;
 import java.time.LocalDateTime;
 
+/**
+ * ResponseDto DTO used to return user details
+ */
 @Data
 public class UserDto {
 
