@@ -13,6 +13,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import com.smartim.userservice.dto.UserDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -52,16 +53,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserByEmail(String email) {
-        return repo.findByEmail(email).orElseThrow(
+    public UserDto getUserByEmail(String email) {
+        User user =  repo.findByEmail(email).orElseThrow(
                 () -> new ResourceNotFoundException("User", "email", email)
         );
+        return mapper.toUserDtoFromUser(user);
     }
 
     @Override
-    public List<User> getUsersByRole(String role) {
-        return repo.findByRole(role).orElseThrow(
+    public List<UserDto> getUsersByRole(String role) {
+        List<User> user =  repo.findByRole(role).orElseThrow(
                 () -> new ResourceNotFoundException("User", "role", role)
         );
+        return mapper.toUserDtoListFromUserList(user);
     }
 }
