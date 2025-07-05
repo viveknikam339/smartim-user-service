@@ -34,10 +34,7 @@ public class UserServiceImpl implements UserService {
                     "User already registered with given email or mobile number."
             );
         }
-        User user = mapper.toUserEntity(request);
-        user.setPassword(encoder.encode(request.getPassword()));
-        user.setCreatedOn(LocalDateTime.now());
-        user.setCreatedBy(user.getUserName());
+        User user = mapper.toUserEntity(request, encoder);
         repo.save(user);
         return jwtUtil.generateToken(user.getUserName(), user.getRole());
     }
