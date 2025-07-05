@@ -3,16 +3,20 @@ package com.smartim.userservice.mapper;
 import com.smartim.userservice.dto.RegisterRequest;
 import com.smartim.userservice.dto.UserDto;
 import com.smartim.userservice.entity.User;
+import org.mapstruct.Context;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
  * Mapper interface for converting between User entity and DTOs.
  * Implemented automatically by MapStruct during build time.
  */
-@Mapper(componentModel = "spring") // Important for Spring injection
+@Mapper(componentModel = "spring", imports = {LocalDateTime.class}) // Important for Spring injection
 public interface UserMapper {
 
     /**
@@ -26,7 +30,10 @@ public interface UserMapper {
      * @param registerRequest the request containing user input during registration
      * @return the corresponding User entity
      */
-    User toUserEntity(RegisterRequest registerRequest);
+    @Mapping(target = "password", expression = "java(encoder.encode(registerRequest.getPassword()))")
+    @Mapping(target = "createdOn", expression = "java(LocalDateTime.now())")
+    @Mapping(target = "createdBy", source = "userName")
+    User toUserEntity(RegisterRequest registerRequest, @Context PasswordEncoder encoder);
 
     /**
      * Converts a User entity to a UserDto.
