@@ -100,7 +100,7 @@ public class UserController {
     /**
      * Retrieves a user by their email (or user ID if used as email).
      *
-     * @param id the email or unique identifier of the user
+     * @param emailId the email or unique identifier of the user
      * @return a response entity containing the user's information
      */
     @Operation(
