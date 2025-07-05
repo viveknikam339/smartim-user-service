@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
         user.setCreatedOn(LocalDateTime.now());
         user.setCreatedBy(user.getUserName());
         repo.save(user);
-        return jwtUtil.generateToken(user.getEmail(), user.getRole());
+        return jwtUtil.generateToken(user.getUserName(), user.getRole());
     }
 
     @Override
