@@ -45,7 +45,7 @@ public class UserDto {
     private String userName;
 
     @Schema(
-            description = "Date on which user got registered", example = "2025-07-05T19:21:33.727138"
+            description = "Date time on which user got registered", example = "2025-07-05T19:21:33.727138"
     )
     private LocalDateTime createdOn;
 
@@ -55,7 +55,7 @@ public class UserDto {
     private String createdBy;
 
     @Schema(
-            description = "Date on which user got updated", example = "2025-07-05T19:21:33.727138"
+            description = "Date time on which user got updated", example = "2025-07-05T19:21:33.727138"
     )
     private LocalDateTime updatedOn;
 

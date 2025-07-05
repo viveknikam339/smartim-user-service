@@ -98,14 +98,14 @@ public class UserController {
     }
 
     /**
-     * Retrieves a user by their email (or user ID if used as email).
+     * Retrieves a user by their email.
      *
-     * @param id the email or unique identifier of the user
+     * @param emailId the email ID of the user
      * @return a response entity containing the user's information
      */
     @Operation(
-            summary = "Get User by ID REST API",
-            description = "REST API to get User by ID inside SMARTIM"
+            summary = "Get User by email ID REST API",
+            description = "REST API to get User by email ID inside SMARTIM"
     )
     @ApiResponses({
             @ApiResponse(
@@ -122,9 +122,9 @@ public class UserController {
             )
     }
     )
-    @GetMapping("/{id}")
-    public ResponseEntity<UserDto> getUserById(@PathVariable String id){
-        return ResponseEntity.ok(userService.getUserByEmail(id));
+    @GetMapping("/{emailId}")
+    public ResponseEntity<UserDto> getUserById(@PathVariable String emailId){
+        return ResponseEntity.ok(userService.getUserByEmail(emailId));
     }
 
     /**
