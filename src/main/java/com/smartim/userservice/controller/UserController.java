@@ -1,7 +1,9 @@
 package com.smartim.userservice.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.smartim.userservice.contants.UserConstants;
 import com.smartim.userservice.dto.*;
+import com.smartim.userservice.service.RedisService;
 import com.smartim.userservice.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -29,6 +31,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+    private final RedisService redisService;
 
     /**
      * Registers a new user.
@@ -123,8 +126,13 @@ public class UserController {
     }
     )
     @GetMapping("/{emailId}")
-    public ResponseEntity<UserDto> getUserById(@PathVariable String emailId){
-        return ResponseEntity.ok(userService.getUserByEmail(emailId));
+    public ResponseEntity<UserDto> getUserById(@PathVariable String emailId) throws JsonProcessingException {
+        UserDto userDto =  redisService.get("user_email_" + emailId, UserDto.class);
+        if (userDto == null) {
+            userDto = userService.getUserByEmail(emailId);
+            redisService.set("user_email_" + emailId, userDto, 300l);
+        }
+        return ResponseEntity.ok(userDto);
     }
 
     /**

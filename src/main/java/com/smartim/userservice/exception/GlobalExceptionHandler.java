@@ -55,4 +55,23 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponseDto, HttpStatus.NOT_FOUND);
     }
 
+    /**
+     * Handles JsonProcessingException
+     *
+     * @param exception contains JsonProcessingException information
+     * @param webRequest contains request related information
+     * @return a response entity containing error details
+     */
+    @ExceptionHandler(JsonProcessingException.class)
+    public ResponseEntity<ErrorResponseDto> handleJsonProcessingException(
+            UserAlreadyExistsException exception, WebRequest webRequest
+    ){
+        ErrorResponseDto errorResponseDto =  new ErrorResponseDto(
+                webRequest.getDescription(false),
+                HttpStatus.BAD_REQUEST,
+                exception.getMessage(),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(errorResponseDto, HttpStatus.BAD_REQUEST);
+    }
 }
