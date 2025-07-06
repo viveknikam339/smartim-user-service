@@ -16,7 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import com.fasterxml.jackson.core.type.TypeReference;
 import java.security.Principal;
 import java.util.List;
 
@@ -130,7 +130,7 @@ public class UserController {
         UserDto userDto =  redisService.get("user_email_" + emailId, UserDto.class);
         if (userDto == null) {
             userDto = userService.getUserByEmail(emailId);
-            redisService.set("user_email_" + emailId, userDto, 300l);
+            redisService.set("user_email_" + emailId, userDto, 300L);
         }
         return ResponseEntity.ok(userDto);
     }
@@ -161,8 +161,13 @@ public class UserController {
     }
     )
     @GetMapping("/role/{role}")
-    public ResponseEntity<List<UserDto>> getUsersByRole(@PathVariable String role){
-        return ResponseEntity.ok(userService.getUsersByRole(role));
+    public ResponseEntity<List<UserDto>> getUsersByRole(@PathVariable String role) throws JsonProcessingException {
+        List<UserDto> userDto =  redisService.get("users_role_" + role, new TypeReference<List<UserDto>>() {});
+        if (userDto == null || userDto.isEmpty()) {
+            userDto = userService.getUsersByRole(role);
+            redisService.set("users_role_" + role, userDto, 300L);
+        }
+        return ResponseEntity.ok(userDto);
     }
 
 
