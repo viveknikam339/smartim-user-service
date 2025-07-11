@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
- * ErrorResponseDto DTO used to get information to register user.
+ * RegisterRequest DTO used to get information to register user.
  */
 @Schema(
         name = "Register User",
