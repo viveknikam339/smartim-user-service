@@ -1,5 +1,6 @@
 package com.smartim.userservice.service.serviceimpl;
 
+import com.smartim.userservice.contants.UserConstants;
 import com.smartim.userservice.entity.User;
 import com.smartim.userservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +33,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) {
         User user = repo.findByUserName(username).orElseThrow(
-                () -> new UsernameNotFoundException("User not found.")
+                () -> new UsernameNotFoundException(UserConstants.USER_NOT_FOUND)
         );
         return new org.springframework.security.core.userdetails.User(user.getUserName(), user.getPassword(), List.of(new SimpleGrantedAuthority(user.getRole())));
     }

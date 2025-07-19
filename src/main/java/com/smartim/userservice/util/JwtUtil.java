@@ -35,10 +35,11 @@ public class JwtUtil {
      * @param role the role of the user
      * @return a signed JWT token as a String
      */
-    public String generateToken(String userName, String role){
+    public String generateToken(String userName, String role, String email){
         return Jwts.builder()
                 .setSubject(userName)
                 .claim("role", role)
+                .claim("email", email)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationTimeMs))
                 .signWith(SignatureAlgorithm.HS256, jwtSecret.getBytes())
