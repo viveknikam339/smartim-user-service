@@ -16,10 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.fasterxml.jackson.core.type.TypeReference;
-import java.security.Principal;
-import java.util.List;
 
+import java.security.Principal;
 
 /**
  * REST controller for handling user-related operations such as registration,
@@ -27,7 +25,7 @@ import java.util.List;
  */
 @Tag(name = "User APIs", description = "Endpoints for user management")
 @RestController
-@RequestMapping(value = "/users", produces = {MediaType.APPLICATION_JSON_VALUE})
+@RequestMapping(value = "/api/users", produces = {MediaType.APPLICATION_JSON_VALUE})
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
@@ -96,8 +94,76 @@ public class UserController {
                     ))
     })
     @GetMapping("/me")
-    public ResponseEntity<UserDto> profile(Principal principal){
-        return ResponseEntity.ok(userService.getUserByEmail(principal.getName()));
+    public ResponseEntity<UserDto> profile(Principal principal) throws JsonProcessingException {
+        String userName =  principal.getName();
+        UserDto userDto =  redisService.get("users_name_" + userName, UserDto.class);
+        if (userDto == null) {
+            userDto = userService.getUserByUserName(userName);
+            redisService.set("users_name_" + userName, userDto, 300L);
+        }
+        return ResponseEntity.ok(userDto);
+    }
+
+    /**
+     * Returns the currently updated user's profile information.
+     *
+     * @param principal the security principal of the currently authenticated user
+     * @param request the updated details such as name and mobile number.
+     * @return a response entity containing the user's profile
+     */
+    @Operation(
+            summary = "Get currently authenticated user's profile and a request which contains details that needs to be updated.",
+            description = "Returns the updated profile details of the authenticated user based on the JWT token"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User profile updated successfully"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized – JWT token missing or invalid",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponseDto.class)
+                    ))
+    })
+    @PutMapping("/me")
+    public ResponseEntity<UserDto> updateProfile(@RequestBody UpdateUserRequest request,
+                                                 Principal principal) throws JsonProcessingException {
+        String userName = principal.getName();
+        UserDto updatedUser = userService.updateUserProfile(userName, request);
+        redisService.set("users_name_" + userName, updatedUser, 300L);
+        redisService.set("user_email_" + updatedUser.getEmail(), updatedUser, 300L);
+        return ResponseEntity.ok(updatedUser);
+    }
+
+    /**
+     * Update the status of user by their userName.
+     *
+     * @param userName the user-name of the user
+     * @return a response entity containing the user's information
+     */
+    @Operation(
+            summary = "Update the status of user by their user-name REST API",
+            description = "REST API to update User status by user-name inside SMARTIM"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "HTTP status OK"
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "HTTP status Not Found",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponseDto.class)
+                    )
+            )
+    }
+    )
+    @PatchMapping("/{userName}/status")
+    public ResponseEntity<UserDto> updateUserStatus(@PathVariable String userName) throws JsonProcessingException {
+        UserDto updatedUser = userService.updateUserStatus(userName);
+        redisService.set("users_name_" + userName, updatedUser, 300L);
+        redisService.set("user_email_" + updatedUser.getEmail(), updatedUser, 300L);
+        return ResponseEntity.ok(updatedUser);
     }
 
     /**
@@ -136,39 +202,21 @@ public class UserController {
     }
 
     /**
-     * Retrieves a list of users by their role.
+     * Reset user password.
      *
-     * @param role the role to filter users by (e.g., "ADMIN", "USER")
-     * @return a response entity containing the list of users with the given role
+     * @param resetPasswordRequest contains reset password details.
+     * @return a success message when password reset successfully.
      */
     @Operation(
-            summary = "Get list of User by Role REST API",
-            description = "REST API to get list of User by Role inside SMARTIM"
+            summary = "Register User REST API",
+            description = "REST API to reset User password inside SMARTIM"
     )
-    @ApiResponses({
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "HTTP status OK"
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "HTTP status Not Found",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorResponseDto.class)
-                    )
-            )
-    }
+    @ApiResponse(
+            responseCode = "200",
+            description = "User password updated successfully"
     )
-    @GetMapping("/role/{role}")
-    public ResponseEntity<List<UserDto>> getUsersByRole(@PathVariable String role) throws JsonProcessingException {
-        List<UserDto> userDto =  redisService.get("users_role_" + role, new TypeReference<List<UserDto>>() {});
-        if (userDto == null || userDto.isEmpty()) {
-            userDto = userService.getUsersByRole(role);
-            redisService.set("users_role_" + role, userDto, 300L);
-        }
-        return ResponseEntity.ok(userDto);
+    @PostMapping("/resetPassword")
+    public ResponseEntity<String> register(@RequestBody ResetPasswordRequest resetPasswordRequest){
+        return ResponseEntity.ok(userService.resetUserPassword(resetPasswordRequest));
     }
-
-
 }

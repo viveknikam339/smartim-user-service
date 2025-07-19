@@ -1,8 +1,6 @@
 package com.smartim.userservice.service;
 
-import com.smartim.userservice.dto.LoginRequest;
-import com.smartim.userservice.dto.RegisterRequest;
-import com.smartim.userservice.dto.UserDto;
+import com.smartim.userservice.dto.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,5 +14,19 @@ public interface UserService {
 
     UserDto getUserByEmail(String email);
 
+    UserDto getUserByUserName(String email);
+
     List<UserDto> getUsersByRole(String role);
+
+    UserDto updateUserProfile(String userName, UpdateUserRequest request);
+
+    UserDto updateUserStatus(String userName);
+
+    List<UserDto> getUsersWithFilters(String email, String role, Boolean status);
+
+    void updateRole(String userName, String role, String updatedBy);
+
+    void deleteUser(String userName);
+
+    String resetUserPassword(ResetPasswordRequest resetPasswordRequest);
 }

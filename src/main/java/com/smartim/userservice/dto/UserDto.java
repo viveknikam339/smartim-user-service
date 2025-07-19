@@ -5,7 +5,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 /**
- * ResponseDto DTO used to return user details
+ * UserDto DTO used to return user details
  */
 @Schema(
         name = "User",
