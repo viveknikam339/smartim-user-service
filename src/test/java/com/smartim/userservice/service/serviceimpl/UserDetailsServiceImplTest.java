@@ -14,7 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
-public class UserDetailsServiceImplTest {
+class UserDetailsServiceImplTest {
 
     private static final String USER_NAME = "test@example.com";
     private static final String PASSWORD = "password";

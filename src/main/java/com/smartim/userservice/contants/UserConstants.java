@@ -22,5 +22,6 @@ public class UserConstants {
     public static final String MESSAGE_400="Bad request, Please try again with valid request";
     public static final String STATUS_500="500";
     public static final String MESSAGE_500="An error occurred. Please try again or contact Dev team.";
-
+    public static final String USER_NAME_KEY = "users_name_";
+    public static final String USER_EMAIL_KEY = "user_email_";
 }

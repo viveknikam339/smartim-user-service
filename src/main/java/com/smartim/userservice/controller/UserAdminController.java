@@ -1,6 +1,5 @@
 package com.smartim.userservice.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.smartim.userservice.dto.ErrorResponseDto;
 import com.smartim.userservice.dto.UserDto;
 import com.smartim.userservice.entity.User;
@@ -110,7 +109,7 @@ public class UserAdminController {
     }
     )
     @GetMapping("/role/{role}")
-    public ResponseEntity<List<UserDto>> getUsersByRole(@PathVariable String role) throws JsonProcessingException {
+    public ResponseEntity<List<UserDto>> getUsersByRole(@PathVariable String role) {
         return ResponseEntity.ok(userService.getUsersByRole(role));
     }
 }

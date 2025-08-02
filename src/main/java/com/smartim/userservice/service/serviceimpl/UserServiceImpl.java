@@ -101,7 +101,7 @@ public class UserServiceImpl implements UserService {
         User user = repo.findByUserName(userName).orElseThrow(
                 () -> new UsernameNotFoundException(UserConstants.USER_NOT_FOUND)
         );
-        user.setUserStatus(user.getUserStatus() != true);
+        user.setUserStatus(!user.getUserStatus());
         return mapper.toUserDtoFromUser(repo.save(user));
     }
 

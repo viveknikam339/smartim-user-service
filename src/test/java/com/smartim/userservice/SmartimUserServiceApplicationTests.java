@@ -8,6 +8,7 @@ class SmartimUserServiceApplicationTests {
 
 	@Test
 	void contextLoads() {
+		//Loads context
 	}
 
 }
