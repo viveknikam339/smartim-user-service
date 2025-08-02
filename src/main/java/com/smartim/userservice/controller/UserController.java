@@ -16,8 +16,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.security.Principal;
+import static com.smartim.userservice.contants.UserConstants.USER_NAME_KEY;
+import static com.smartim.userservice.contants.UserConstants.USER_EMAIL_KEY;
 
 /**
  * REST controller for handling user-related operations such as registration,
@@ -96,10 +97,10 @@ public class UserController {
     @GetMapping("/me")
     public ResponseEntity<UserDto> profile(Principal principal) throws JsonProcessingException {
         String userName =  principal.getName();
-        UserDto userDto =  redisService.get("users_name_" + userName, UserDto.class);
+        UserDto userDto =  redisService.get(USER_NAME_KEY + userName, UserDto.class);
         if (userDto == null) {
             userDto = userService.getUserByUserName(userName);
-            redisService.set("users_name_" + userName, userDto, 300L);
+            redisService.set(USER_NAME_KEY + userName, userDto, 300L);
         }
         return ResponseEntity.ok(userDto);
     }
@@ -128,8 +129,8 @@ public class UserController {
                                                  Principal principal) throws JsonProcessingException {
         String userName = principal.getName();
         UserDto updatedUser = userService.updateUserProfile(userName, request);
-        redisService.set("users_name_" + userName, updatedUser, 300L);
-        redisService.set("user_email_" + updatedUser.getEmail(), updatedUser, 300L);
+        redisService.set(USER_NAME_KEY + userName, updatedUser, 300L);
+        redisService.set(USER_EMAIL_KEY + updatedUser.getEmail(), updatedUser, 300L);
         return ResponseEntity.ok(updatedUser);
     }
 
@@ -162,7 +163,7 @@ public class UserController {
     public ResponseEntity<UserDto> updateUserStatus(@PathVariable String userName) throws JsonProcessingException {
         UserDto updatedUser = userService.updateUserStatus(userName);
         redisService.set("users_name_" + userName, updatedUser, 300L);
-        redisService.set("user_email_" + updatedUser.getEmail(), updatedUser, 300L);
+        redisService.set(USER_EMAIL_KEY + updatedUser.getEmail(), updatedUser, 300L);
         return ResponseEntity.ok(updatedUser);
     }
 
@@ -193,10 +194,10 @@ public class UserController {
     )
     @GetMapping("/{emailId}")
     public ResponseEntity<UserDto> getUserById(@PathVariable String emailId) throws JsonProcessingException {
-        UserDto userDto =  redisService.get("user_email_" + emailId, UserDto.class);
+        UserDto userDto =  redisService.get(USER_NAME_KEY + emailId, UserDto.class);
         if (userDto == null) {
             userDto = userService.getUserByEmail(emailId);
-            redisService.set("user_email_" + emailId, userDto, 300L);
+            redisService.set(USER_EMAIL_KEY + emailId, userDto, 300L);
         }
         return ResponseEntity.ok(userDto);
     }
