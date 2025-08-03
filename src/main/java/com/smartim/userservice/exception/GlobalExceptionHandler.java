@@ -82,4 +82,5 @@ public class GlobalExceptionHandler {
         );
         return new ResponseEntity<>(errorResponseDto, status);
     }
+
 }
