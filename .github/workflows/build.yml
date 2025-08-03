@@ -45,6 +45,6 @@ jobs:
             -Dsonar.projectKey=smartim-user-service \
             -Dsonar.organization=smartim-project \
             -Dsonar.host.url=https://sonarcloud.io \
-            -Dsonar.login=$SONAR_TOKEN
+            -Dsonar.login=$SONAR_TOKEN \
             -Dsonar.branch.name=main
 
