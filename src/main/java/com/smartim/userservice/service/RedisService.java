@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 @RequiredArgsConstructor
 public class RedisService {
-    private final RedisTemplate redisTemplate;
+    private final RedisTemplate<String, String> redisTemplate;
     private final ObjectMapper objectMapper;
 
     /**
