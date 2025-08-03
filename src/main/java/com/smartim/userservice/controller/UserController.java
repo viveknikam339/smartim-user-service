@@ -144,21 +144,12 @@ public class UserController {
             summary = "Update the status of user by their user-name REST API",
             description = "REST API to update User status by user-name inside SMARTIM"
     )
-    @ApiResponses({
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "HTTP status OK"
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "HTTP status Not Found",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorResponseDto.class)
-                    )
-            )
-    }
-    )
+    @ApiResponse(responseCode = "200", description = "HTTP status OK")
+    @ApiResponse(responseCode = "404", description = "HTTP status Not Found",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ErrorResponseDto.class)
+            ))
     @PatchMapping("/{userName}/status")
     public ResponseEntity<UserDto> updateUserStatus(@PathVariable String userName) throws JsonProcessingException {
         UserDto updatedUser = userService.updateUserStatus(userName);
@@ -177,21 +168,12 @@ public class UserController {
             summary = "Get User by email ID REST API",
             description = "REST API to get User by email ID inside SMARTIM"
     )
-    @ApiResponses({
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "HTTP status OK"
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "HTTP status Not Found",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorResponseDto.class)
-                    )
-            )
-    }
-    )
+    @ApiResponse(responseCode = "200", description = "HTTP status OK")
+    @ApiResponse(responseCode = "404", description = "HTTP status Not Found",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ErrorResponseDto.class)
+            ))
     @GetMapping("/{emailId}")
     public ResponseEntity<UserDto> getUserById(@PathVariable String emailId) throws JsonProcessingException {
         UserDto userDto =  redisService.get(USER_NAME_KEY + emailId, UserDto.class);

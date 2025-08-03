@@ -8,132 +8,79 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+
 import java.time.LocalDateTime;
 
-
 /**
- * GlobalExceptionHandler for handling all the exception globally
+ * GlobalExceptionHandler is a centralized exception handling component
+ * that intercepts exceptions thrown across the whole application and provides
+ * appropriate HTTP responses using @ControllerAdvice.
+ *
+ * This class ensures consistent structure for error responses by wrapping
+ * exceptions into a common {@link ErrorResponseDto} format.
  */
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
     /**
-     * Handles UserAlreadyExistsException
+     * Handles multiple types of exceptions that should result in HTTP 400 Bad Request.
      *
-     * @param exception contains UserAlreadyExistsException information
-     * @param webRequest contains request related information
-     * @return a response entity containing error details
+     * Supported exceptions:
+     * <ul>
+     *     <li>{@link UserAlreadyExistsException}</li>
+     *     <li>{@link RequestProcessingException}</li>
+     *     <li>{@link UsernameNotFoundException}</li>
+     *     <li>{@link BadCredentialsException}</li>
+     * </ul>
+     *
+     * @param exception   the exception thrown
+     * @param webRequest  request metadata
+     * @return a ResponseEntity containing a structured error response
      */
-    @ExceptionHandler(UserAlreadyExistsException.class)
-    public ResponseEntity<ErrorResponseDto> handleUserAlreadyExistsException(
-            UserAlreadyExistsException exception, WebRequest webRequest
-    ){
-        ErrorResponseDto errorResponseDto =  new ErrorResponseDto(
-                webRequest.getDescription(false),
-                HttpStatus.BAD_REQUEST,
-                exception.getMessage(),
-                LocalDateTime.now()
-        );
-        return new ResponseEntity<>(errorResponseDto, HttpStatus.BAD_REQUEST);
+    @ExceptionHandler({
+            UserAlreadyExistsException.class,
+            RequestProcessingException.class,
+            UsernameNotFoundException.class,
+            BadCredentialsException.class
+    })
+    public ResponseEntity<ErrorResponseDto> handleBadRequestExceptions(
+            RuntimeException exception, WebRequest webRequest
+    ) {
+        return buildErrorResponse(exception, webRequest, HttpStatus.BAD_REQUEST);
     }
 
     /**
-     * Handles UserAlreadyExistsException
+     * Handles {@link ResourceNotFoundException} which results in HTTP 404 Not Found.
      *
-     * @param exception contains ResourceNotFoundException information
-     * @param webRequest contains request related information
-     * @return a response entity containing error details
+     * @param exception   the exception thrown
+     * @param webRequest  request metadata
+     * @return a ResponseEntity containing a structured error response
      */
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ErrorResponseDto> handleResourceNotFoundException(
+    public ResponseEntity<ErrorResponseDto> handleNotFoundException(
             ResourceNotFoundException exception, WebRequest webRequest
-    ){
-        ErrorResponseDto errorResponseDto =  new ErrorResponseDto(
-                webRequest.getDescription(false),
-                HttpStatus.NOT_FOUND,
-                exception.getMessage(),
-                LocalDateTime.now()
-        );
-        return new ResponseEntity<>(errorResponseDto, HttpStatus.NOT_FOUND);
+    ) {
+        return buildErrorResponse(exception, webRequest, HttpStatus.NOT_FOUND);
     }
 
     /**
-     * Handles JsonProcessingException
+     * Helper method to build a standardized error response from any exception.
      *
-     * @param exception contains JsonProcessingException information
-     * @param webRequest contains request related information
-     * @return a response entity containing error details
+     * @param exception   the exception to convert
+     * @param webRequest  request metadata
+     * @param status      HTTP status to return
+     * @return a ResponseEntity containing the {@link ErrorResponseDto}
      */
-    @ExceptionHandler(JsonProcessingException.class)
-    public ResponseEntity<ErrorResponseDto> handleJsonProcessingException(
-            UserAlreadyExistsException exception, WebRequest webRequest
-    ){
-        ErrorResponseDto errorResponseDto =  new ErrorResponseDto(
+    private ResponseEntity<ErrorResponseDto> buildErrorResponse(
+            Exception exception, WebRequest webRequest, HttpStatus status
+    ) {
+        ErrorResponseDto errorResponseDto = new ErrorResponseDto(
                 webRequest.getDescription(false),
-                HttpStatus.BAD_REQUEST,
+                status,
                 exception.getMessage(),
                 LocalDateTime.now()
         );
-        return new ResponseEntity<>(errorResponseDto, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorResponseDto, status);
     }
 
-    /**
-     * Handles RequestProcessingException
-     *
-     * @param exception contains RequestProcessingException information
-     * @param webRequest contains request related information
-     * @return a response entity containing error details
-     */
-    @ExceptionHandler(RequestProcessingException.class)
-    public ResponseEntity<ErrorResponseDto> handleRequestProcessingException(
-            RequestProcessingException exception, WebRequest webRequest
-    ){
-        ErrorResponseDto errorResponseDto =  new ErrorResponseDto(
-                webRequest.getDescription(false),
-                HttpStatus.BAD_REQUEST,
-                exception.getMessage(),
-                LocalDateTime.now()
-        );
-        return new ResponseEntity<>(errorResponseDto, HttpStatus.BAD_REQUEST);
-    }
-
-    /**
-     * Handles UsernameNotFoundException
-     *
-     * @param exception contains UsernameNotFoundException information
-     * @param webRequest contains request related information
-     * @return a response entity containing error details
-     */
-    @ExceptionHandler(UsernameNotFoundException.class)
-    public ResponseEntity<ErrorResponseDto> handleUsernameNotFoundException(
-            UsernameNotFoundException exception, WebRequest webRequest
-    ){
-        ErrorResponseDto errorResponseDto =  new ErrorResponseDto(
-                webRequest.getDescription(false),
-                HttpStatus.BAD_REQUEST,
-                exception.getMessage(),
-                LocalDateTime.now()
-        );
-        return new ResponseEntity<>(errorResponseDto, HttpStatus.BAD_REQUEST);
-    }
-
-    /**
-     * Handles BadCredentialsException
-     *
-     * @param exception contains BadCredentialsException information
-     * @param webRequest contains request related information
-     * @return a response entity containing error details
-     */
-    @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<ErrorResponseDto> handleBadCredentialsException(
-            BadCredentialsException exception, WebRequest webRequest
-    ){
-        ErrorResponseDto errorResponseDto =  new ErrorResponseDto(
-                webRequest.getDescription(false),
-                HttpStatus.BAD_REQUEST,
-                exception.getMessage(),
-                LocalDateTime.now()
-        );
-        return new ResponseEntity<>(errorResponseDto, HttpStatus.BAD_REQUEST);
-    }
 }

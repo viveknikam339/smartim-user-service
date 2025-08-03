@@ -6,7 +6,6 @@ import com.smartim.userservice.entity.User;
 import com.smartim.userservice.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -93,20 +92,17 @@ public class UserAdminController {
             summary = "Get list of User by Role REST API",
             description = "REST API to get list of User by Role inside SMARTIM"
     )
-    @ApiResponses({
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "HTTP status OK"
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "HTTP status Not Found",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorResponseDto.class)
-                    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "HTTP status OK"
+    )
+    @ApiResponse(
+            responseCode = "404",
+            description = "HTTP status Not Found",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ErrorResponseDto.class)
             )
-    }
     )
     @GetMapping("/role/{role}")
     public ResponseEntity<List<UserDto>> getUsersByRole(@PathVariable String role) {
