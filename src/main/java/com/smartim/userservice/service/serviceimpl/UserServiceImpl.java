@@ -10,7 +10,6 @@ import com.smartim.userservice.repository.UserRepository;
 import com.smartim.userservice.service.UserService;
 import com.smartim.userservice.util.JwtUtil;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -19,8 +18,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -47,9 +44,7 @@ public class UserServiceImpl implements UserService {
     private final JwtUtil jwtUtil;
     private final PasswordEncoder encoder;
     private final UserMapper mapper;
-
-    @PersistenceContext
-    private EntityManager entityManager;
+    private final EntityManager entityManager;
 
     /**
      * Registers a new user after checking for existing users with the same email or mobile number.
@@ -60,11 +55,11 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public String register(RegisterRequest request) {
-        List<User> existingUser = repo.findByEmailOrMobileNumberOrUserName
-                (request.getEmail(), request.getMobileNumber(), request.getUserName());
+        List<User> existingUser = repo.findByEmailOrMobileNumber
+                (request.getEmail(), request.getMobileNumber());
         if(!existingUser.isEmpty()){
             throw new UserAlreadyExistsException(
-                    "User already registered with given email, mobile number or user-name."
+                    "User already registered with given email or mobile number"
             );
         }
         User user = mapper.toUserEntity(request, encoder);
@@ -85,7 +80,7 @@ public class UserServiceImpl implements UserService {
         User user = repo.findByUserNameAndUserStatus(userName, true).orElseThrow(
                 () -> new UsernameNotFoundException(UserConstants.USER_NOT_FOUND)
         );
-        mapper.toUserEntity(request, user, userName, LocalDateTime.now());
+        mapper.toUserEntity(request, user);
         return mapper.toUserDtoFromUser(repo.save(user));
     }
 
@@ -207,8 +202,6 @@ public class UserServiceImpl implements UserService {
                 () -> new UsernameNotFoundException(UserConstants.USER_NOT_FOUND)
         );
         user.setRole(role);
-        user.setUpdatedOn(LocalDateTime.now());
-        user.setUpdatedBy(updatedBy);
         repo.save(user);
     }
 
@@ -231,9 +224,14 @@ public class UserServiceImpl implements UserService {
         User user = repo.findByUserName(resetPasswordRequest.getUserName()).orElseThrow(
                 () -> new UsernameNotFoundException(UserConstants.USER_NOT_FOUND)
         );
-        if (resetPasswordRequest.getPasswordResetType().equals(UserConstants.RESET_PASSWORD) &&
-                !encoder.matches(resetPasswordRequest.getOldPassword(), user.getPassword()))
-            throw new BadCredentialsException(UserConstants.ENTERED_WRONG_PASSWORD);
+        if (resetPasswordRequest.getPasswordResetType().equals(UserConstants.RESET_CRED)) {
+            if (!encoder.matches(resetPasswordRequest.getOldPassword(), user.getPassword())) {
+                throw new BadCredentialsException(UserConstants.ENTERED_WRONG_PASSWORD);
+            }
+        } else {
+            // TODO: Implement secure token/OTP verification for FORGOT_CRED type before allowing password reset
+            throw new BadCredentialsException("Unsupported password reset type without verification token.");
+        }
         user.setPassword(encoder.encode(resetPasswordRequest.getNewPassword()));
         repo.save(user);
         return UserConstants.PASSWORD_RESET_SUCCESSFULLY;

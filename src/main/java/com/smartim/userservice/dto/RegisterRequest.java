@@ -37,9 +37,4 @@ public class RegisterRequest {
             description = "Role of the user", example = "ADMIN"
     )
     private String role;
-
-    @Schema(
-            description = "User name of the user", example = "vivek1234"
-    )
-    private String userName;
 }

@@ -60,10 +60,9 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
      *
      * @param email the email to search
      * @param mobileNumber the mobile number to search
-     * @param userName the user-name to search
      * @return a list of users matching either the email, mobile number or userName
      */
-    List<User> findByEmailOrMobileNumberOrUserName(String email, String mobileNumber, String userName);
+    List<User> findByEmailOrMobileNumber(String email, String mobileNumber);
 
     void deleteByUserName(String userName);
 }

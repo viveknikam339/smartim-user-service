@@ -3,13 +3,14 @@ package com.smartim.userservice.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.smartim.userservice.contants.UserConstants;
 import com.smartim.userservice.dto.*;
-import com.smartim.userservice.service.RedisService;
+import com.smartim.userservice.service.shared.RedisService;
 import com.smartim.userservice.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -95,6 +96,7 @@ public class UserController {
                     ))
     })
     @GetMapping("/me")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<UserDto> profile(Principal principal) throws JsonProcessingException {
         String userName =  principal.getName();
         UserDto userDto =  redisService.get(USER_NAME_KEY + userName, UserDto.class);
@@ -125,6 +127,7 @@ public class UserController {
                     ))
     })
     @PutMapping("/me")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<UserDto> updateProfile(@RequestBody UpdateUserRequest request,
                                                  Principal principal) throws JsonProcessingException {
         String userName = principal.getName();
@@ -160,6 +163,7 @@ public class UserController {
     }
     )
     @PatchMapping("/{userName}/status")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<UserDto> updateUserStatus(@PathVariable String userName) throws JsonProcessingException {
         UserDto updatedUser = userService.updateUserStatus(userName);
         redisService.set("users_name_" + userName, updatedUser, 300L);
@@ -193,6 +197,7 @@ public class UserController {
     }
     )
     @GetMapping("/{emailId}")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<UserDto> getUserById(@PathVariable String emailId) throws JsonProcessingException {
         UserDto userDto =  redisService.get(USER_NAME_KEY + emailId, UserDto.class);
         if (userDto == null) {
@@ -217,7 +222,10 @@ public class UserController {
             description = "User password updated successfully"
     )
     @PostMapping("/resetPassword")
-    public ResponseEntity<String> register(@RequestBody ResetPasswordRequest resetPasswordRequest){
+    @SecurityRequirement(name = "bearerAuth")
+    public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordRequest resetPasswordRequest){
         return ResponseEntity.ok(userService.resetUserPassword(resetPasswordRequest));
     }
+
+    // TODO: Create a seprate controller for Forgot Password flow with Email/OTP verification.
 }

@@ -26,8 +26,6 @@ public interface AddressMapper {
      * @param addAddressRequest the request containing address related information to add address
      * @return the corresponding Address entity
      */
-    @Mapping(target = "createdOn", expression = "java(LocalDateTime.now())")
-    @Mapping(target = "createdBy", source = "userName")
     Address toAddressEntity(AddAddressRequest addAddressRequest);
 
     /**
@@ -37,8 +35,7 @@ public interface AddressMapper {
      * @return the corresponding Address entity
      */
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void toAddressEntity(UpdateAddressRequest updateAddressRequest, @MappingTarget Address address,
-                      @Context String updatedBy, @Context LocalDateTime updatedOn);
+    void toAddressEntity(UpdateAddressRequest updateAddressRequest, @MappingTarget Address address);
 
     /**
      * Converts an Address entity to a AddressDto.

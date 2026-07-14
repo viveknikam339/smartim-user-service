@@ -1,0 +1,24 @@
+name: Gemini PR Code Review
+
+# Trigger the workflow when a PR is opened or updated
+on: [pull_request]
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    # Required permissions to allow the action to post comments on the PR
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run Gemini Code Review
+        uses: sshnaidm/gemini-code-review-action@v2
+        with:
+          # Pulls the API key from your secure secrets
+          gemini-key: ${{ secrets.PR_REVIEW_GEMINI_API_KEY }}
+          # Optional: specify the model. Flash is fast and excellent for this.
+          model: gemini-3.5-flash

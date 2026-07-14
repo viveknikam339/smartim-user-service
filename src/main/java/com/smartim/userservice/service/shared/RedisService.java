@@ -1,4 +1,4 @@
-package com.smartim.userservice.service;
+package com.smartim.userservice.service.shared;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
