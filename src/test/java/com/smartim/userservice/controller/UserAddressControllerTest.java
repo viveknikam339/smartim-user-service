@@ -94,8 +94,6 @@ class UserAddressControllerTest {
 
         when(addressService.updateAddress(eq("testuser"), any(UpdateAddressRequest.class))).thenReturn(addressDto);
 
-        // Note: The controller is missing a @PutMapping, so this test assumes a PUT to the root path.
-        // If the intention is different, the controller method needs a proper mapping.
         mockMvc.perform(patch("/api/users/me/addresses/updateAddress")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)

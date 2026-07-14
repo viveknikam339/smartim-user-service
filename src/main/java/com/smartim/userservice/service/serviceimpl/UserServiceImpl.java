@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService {
                 (request.getEmail(), request.getMobileNumber());
         if(!existingUser.isEmpty()){
             throw new UserAlreadyExistsException(
-                    "User already registered with given email, mobile number or user-name."
+                    "User already registered with given email or mobile number"
             );
         }
         User user = mapper.toUserEntity(request, encoder);
@@ -231,7 +231,8 @@ public class UserServiceImpl implements UserService {
         } else {
             // TODO: Implement secure token/OTP verification for FORGOT_CRED type before allowing password reset
             throw new BadCredentialsException("Unsupported password reset type without verification token.");
-        }user.setPassword(encoder.encode(resetPasswordRequest.getNewPassword()));
+        }
+        user.setPassword(encoder.encode(resetPasswordRequest.getNewPassword()));
         repo.save(user);
         return UserConstants.PASSWORD_RESET_SUCCESSFULLY;
     }

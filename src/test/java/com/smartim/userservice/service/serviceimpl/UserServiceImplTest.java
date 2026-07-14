@@ -314,7 +314,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void resetUserPassword_ForgotPassword_Success() {
+    void resetUserPassword_ForgotPassword_ThrowsException() {
         resetPasswordRequest.setPasswordResetType(UserConstants.FORGOT_CRED);
         when(userRepository.findByUserName(USER_NAME)).thenReturn(Optional.of(user));
         assertThrows(BadCredentialsException.class, () -> userService.resetUserPassword(resetPasswordRequest));

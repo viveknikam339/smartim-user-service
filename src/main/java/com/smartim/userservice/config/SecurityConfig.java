@@ -52,7 +52,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/actuator/**","/api/users/register", "/api/users/login","/api/users/resetPassword", "/v3/api-docs/**", "/swagger-ui/**")
+                        .requestMatchers("/actuator/**","/api/users/register", "/api/users/login","/api/users/fortgotPassword", "/v3/api-docs/**", "/swagger-ui/**")
                         .permitAll().anyRequest().authenticated()
                 ).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .userDetailsService(userDetailsService)
