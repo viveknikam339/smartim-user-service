@@ -223,7 +223,9 @@ public class UserController {
     )
     @PostMapping("/resetPassword")
     @SecurityRequirement(name = "bearerAuth")
-    public ResponseEntity<String> register(@RequestBody ResetPasswordRequest resetPasswordRequest){
+    public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordRequest resetPasswordRequest){
         return ResponseEntity.ok(userService.resetUserPassword(resetPasswordRequest));
     }
+
+    // TODO: Create a seprate controller for Forgot Password flow with Email/OTP verification.
 }

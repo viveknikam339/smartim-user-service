@@ -224,10 +224,14 @@ public class UserServiceImpl implements UserService {
         User user = repo.findByUserName(resetPasswordRequest.getUserName()).orElseThrow(
                 () -> new UsernameNotFoundException(UserConstants.USER_NOT_FOUND)
         );
-        if (resetPasswordRequest.getPasswordResetType().equals(UserConstants.RESET_CRED) &&
-                !encoder.matches(resetPasswordRequest.getOldPassword(), user.getPassword()))
-            throw new BadCredentialsException(UserConstants.ENTERED_WRONG_PASSWORD);
-        user.setPassword(encoder.encode(resetPasswordRequest.getNewPassword()));
+        if (resetPasswordRequest.getPasswordResetType().equals(UserConstants.RESET_CRED)) {
+            if (!encoder.matches(resetPasswordRequest.getOldPassword(), user.getPassword())) {
+                throw new BadCredentialsException(UserConstants.ENTERED_WRONG_PASSWORD);
+            }
+        } else {
+            // TODO: Implement secure token/OTP verification for FORGOT_CRED type before allowing password reset
+            throw new BadCredentialsException("Unsupported password reset type without verification token.");
+        }user.setPassword(encoder.encode(resetPasswordRequest.getNewPassword()));
         repo.save(user);
         return UserConstants.PASSWORD_RESET_SUCCESSFULLY;
     }

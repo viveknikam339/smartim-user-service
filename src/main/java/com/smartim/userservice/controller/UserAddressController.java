@@ -92,7 +92,7 @@ public class UserAddressController {
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = AddressDto.class)))
             }
     )
-    @PatchMapping("updateAddress")
+    @PatchMapping("/updateAddress")
     @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<AddressDto> updateAddress(
             @RequestBody UpdateAddressRequest address) {

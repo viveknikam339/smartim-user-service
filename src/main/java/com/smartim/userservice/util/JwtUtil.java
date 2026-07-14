@@ -94,7 +94,7 @@ public class JwtUtil {
     public boolean isTokenExpired(String token) {
         try {
             return extractAllClaims(token).getExpiration().before(new Date());
-        } catch (ExpiredJwtException e) {
+        } catch (io.jsonwebtoken.JwtException e) {
             return true;
         }
     }
@@ -110,7 +110,7 @@ public class JwtUtil {
         try {
             final String username = extractUsername(token);
             return (username.equals(userName) && !isTokenExpired(token));
-        } catch (ExpiredJwtException e) {
+        } catch (io.jsonwebtoken.JwtException e) {
             return false;
         }
     }

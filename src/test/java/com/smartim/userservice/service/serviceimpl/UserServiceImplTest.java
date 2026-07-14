@@ -317,13 +317,7 @@ class UserServiceImplTest {
     void resetUserPassword_ForgotPassword_Success() {
         resetPasswordRequest.setPasswordResetType(UserConstants.FORGOT_CRED);
         when(userRepository.findByUserName(USER_NAME)).thenReturn(Optional.of(user));
-        when(passwordEncoder.encode("newPassword")).thenReturn("newEncodedPassword");
-
-        String result = userService.resetUserPassword(resetPasswordRequest);
-
-        assertEquals(UserConstants.PASSWORD_RESET_SUCCESSFULLY, result);
-        assertEquals("newEncodedPassword", user.getPassword());
-        verify(userRepository, times(1)).save(user);
+        assertThrows(BadCredentialsException.class, () -> userService.resetUserPassword(resetPasswordRequest));
     }
 
     @Test
