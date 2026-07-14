@@ -2,16 +2,16 @@ package com.smartim.userservice.service.serviceimpl;
 
 import com.smartim.userservice.entity.User;
 import com.smartim.userservice.repository.UserRepository;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Optional;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserDetailsServiceImplTest {
@@ -32,14 +32,15 @@ class UserDetailsServiceImplTest {
         user.setUserName(USER_NAME);
         user.setPassword(PASSWORD);
         user.setRole(ROLE);
-        Mockito.when(repo.findByUserName(USER_NAME)).thenReturn(Optional.of(user));
+        when(repo.findByUserName(USER_NAME)).thenReturn(Optional.of(user));
 
         UserDetails result = userDetailsService.loadUserByUsername(USER_NAME);
 
-        Assertions.assertEquals(user.getUserName(), result.getUsername());
-        Assertions.assertEquals(user.getPassword(), result.getPassword());
-        Assertions.assertEquals(user.getRole(), result.getAuthorities().stream()
+        assertEquals(user.getUserName(), result.getUsername());
+        assertEquals(user.getPassword(), result.getPassword());
+        assertEquals(user.getRole(), result.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority).findFirst().orElse(null));
+        verify(repo, times(1)).findByUserName(USER_NAME);
     }
 
 

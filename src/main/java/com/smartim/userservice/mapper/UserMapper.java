@@ -30,9 +30,8 @@ public interface UserMapper {
      * @return the corresponding User entity
      */
     @Mapping(target = "password", expression = "java(encoder.encode(registerRequest.getPassword()))")
-    @Mapping(target = "createdOn", expression = "java(LocalDateTime.now())")
     @Mapping(target = "userStatus", constant = "true")
-    @Mapping(target = "createdBy", source = "userName")
+    @Mapping(target = "userName", source = "email")
     User toUserEntity(RegisterRequest registerRequest, @Context PasswordEncoder encoder);
 
     /**
@@ -42,8 +41,7 @@ public interface UserMapper {
      * @return the corresponding User entity
      */
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void toUserEntity(UpdateUserRequest updateUserRequest, @MappingTarget User user,
-                      @Context String updatedBy, @Context LocalDateTime updatedOn);
+    void toUserEntity(UpdateUserRequest updateUserRequest, @MappingTarget User user);
 
     /**
      * Converts a User entity to a UserDto.

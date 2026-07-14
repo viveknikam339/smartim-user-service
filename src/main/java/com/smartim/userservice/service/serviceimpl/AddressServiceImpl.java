@@ -12,7 +12,6 @@ import com.smartim.userservice.repository.UserRepository;
 import com.smartim.userservice.service.AddressService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -74,7 +73,7 @@ public class AddressServiceImpl implements AddressService {
     public AddressDto updateAddress(String userName, UpdateAddressRequest updatedAddress) {
         Address existing = addressRepository.findById(updatedAddress.getId()).orElseThrow(
                 () -> new ResourceNotFoundException("Address", "user-name", userName));
-        addressMapper.toAddressEntity(updatedAddress, existing, userName, LocalDateTime.now());
+        addressMapper.toAddressEntity(updatedAddress, existing);
 
         return addressMapper.toAddressDtoFromAddress(addressRepository.save(existing));
     }

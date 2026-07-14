@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -50,6 +51,7 @@ public class UserAddressController {
             }
     )
     @GetMapping
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<List<AddressDto>> getAddresses() {
         String userName = getCurrentUserName();
         return ResponseEntity.ok(addressService.getAddresses(userName));
@@ -70,6 +72,7 @@ public class UserAddressController {
             }
     )
     @PostMapping("/addAddress")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<AddressDto> addAddress(@RequestBody AddAddressRequest address) {
         String userName = getCurrentUserName();
         return ResponseEntity.ok(addressService.addAddress(userName, address));
@@ -89,6 +92,8 @@ public class UserAddressController {
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = AddressDto.class)))
             }
     )
+    @PatchMapping("updateAddress")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<AddressDto> updateAddress(
             @RequestBody UpdateAddressRequest address) {
         String userName = getCurrentUserName();
@@ -109,6 +114,7 @@ public class UserAddressController {
             }
     )
     @DeleteMapping("/deleteAddresses")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<Void> deleteAddress(@RequestBody List<Long> addressIds) {
         addressService.deleteAddresses(addressIds);
         return ResponseEntity.ok().build();

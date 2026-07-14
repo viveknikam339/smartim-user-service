@@ -7,6 +7,7 @@ import com.smartim.userservice.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -39,6 +40,7 @@ public class UserAdminController {
     @ApiResponse(responseCode = "200", description = "Users retrieved successfully",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = User.class)))
     @GetMapping("/getUsers")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<List<UserDto>> getAllUsers(
             @Parameter(description = "Filter by email") @RequestParam(required = false) String email,
             @Parameter(description = "Filter by role") @RequestParam(required = false) String role,
@@ -58,6 +60,7 @@ public class UserAdminController {
     @Operation(summary = "Change user role", description = "Assign or update role of a user by user-name")
     @ApiResponse(responseCode = "200", description = "Role updated successfully")
     @PatchMapping("/{userName}/role")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<String> updateUserRole(
             @Parameter(description = "ID of the user to update") @PathVariable String userName,
             @Parameter(description = "New role") @RequestBody String role,
@@ -76,6 +79,7 @@ public class UserAdminController {
     @Operation(summary = "Delete user", description = "Hard delete the user account by user-name")
     @ApiResponse(responseCode = "200", description = "User deleted successfully")
     @DeleteMapping("/{userName}")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<String> deleteUser(
             @Parameter(description = "ID of the user to delete") @PathVariable String userName) {
 
@@ -109,6 +113,7 @@ public class UserAdminController {
     }
     )
     @GetMapping("/role/{role}")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<List<UserDto>> getUsersByRole(@PathVariable String role) {
         return ResponseEntity.ok(userService.getUsersByRole(role));
     }

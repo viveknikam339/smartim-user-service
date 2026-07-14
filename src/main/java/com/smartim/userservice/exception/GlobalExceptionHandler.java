@@ -66,7 +66,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(JsonProcessingException.class)
     public ResponseEntity<ErrorResponseDto> handleJsonProcessingException(
-            UserAlreadyExistsException exception, WebRequest webRequest
+            JsonProcessingException exception, WebRequest webRequest
     ){
         ErrorResponseDto errorResponseDto =  new ErrorResponseDto(
                 webRequest.getDescription(false),

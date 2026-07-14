@@ -14,8 +14,8 @@ public class UserConstants {
     public static final String STATUS_200="200";
     public static final String MESSAGE_200="Request processed successfully";
     public static final String PASSWORD_RESET_SUCCESSFULLY="Password Reset Successfully";
-    public static final String RESET_PASSWORD="RESET";
-    public static final String FORGOT_PASSWORD="FORGOT";
+    public static final String RESET_CRED ="RESET";
+    public static final String FORGOT_CRED ="FORGOT";
     public static final String USER_NOT_FOUND="User Not Found.";
     public static final String ENTERED_WRONG_PASSWORD="You have entered wrong old password.";
     public static final String STATUS_400="400";
@@ -24,4 +24,5 @@ public class UserConstants {
     public static final String MESSAGE_500="An error occurred. Please try again or contact Dev team.";
     public static final String USER_NAME_KEY = "users_name_";
     public static final String USER_EMAIL_KEY = "user_email_";
+    public static final String DEFAULT_USER = "SYSTEM";
 }

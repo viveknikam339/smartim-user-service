@@ -1,6 +1,7 @@
 package com.smartim.userservice.util;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -91,7 +92,11 @@ public class JwtUtil {
      * @return true if the token has expired, false otherwise
      */
     public boolean isTokenExpired(String token) {
-        return extractAllClaims(token).getExpiration().before(new Date());
+        try {
+            return extractAllClaims(token).getExpiration().before(new Date());
+        } catch (ExpiredJwtException e) {
+            return true;
+        }
     }
 
     /**
@@ -102,7 +107,11 @@ public class JwtUtil {
      * @return true if token is valid and not expired, false otherwise
      */
     public boolean isTokenValid(String token, String userName){
-        final String username = extractUsername(token);
-        return (username.equals(userName) && !isTokenExpired(token));
+        try {
+            final String username = extractUsername(token);
+            return (username.equals(userName) && !isTokenExpired(token));
+        } catch (ExpiredJwtException e) {
+            return false;
+        }
     }
 }
