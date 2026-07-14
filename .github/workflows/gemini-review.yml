@@ -21,4 +21,4 @@ jobs:
           # Pulls the API key from your secure secrets
           gemini-key: ${{ secrets.PR_REVIEW_GEMINI_API_KEY }}
           # Optional: specify the model. Flash is fast and excellent for this.
-          model: gemini-2.0-flash
+          model: gemini-2.5-flash
